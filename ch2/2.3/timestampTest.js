@@ -77,6 +77,11 @@ const generateCustomTx = (to, amount, timestamp, node) => {
   return tx;
 };
 // TODO
+const firstSpend = generateCustomTx(victims[0].wallet.address, 10, 10, evilNode);
+const fakeEarlySpend = generateCustomTx(victims[1].wallet.address, 10, 5, evilNode);
+network.broadcast(evilNode.pid, firstSpend);
+network.broadcast(evilNode.pid, fakeEarlySpend);
+
 // create two transactions with the same amount, but with different timestamps
 // broadcast both transactions to the network at the same time
 
