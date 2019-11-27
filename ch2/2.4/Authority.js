@@ -19,14 +19,18 @@ class Authority extends Node {
     this.applyInvalidNonceTxs(tx.contents.from);
   }
 
-	// TODO
   // Order transactions and broadcast that ordering to the network
   orderAndBroadcast(tx) {
-    // give the transactiona the latest nonce in the Authority node's state
+    // give the transactions the latest nonce in the Authority node's state
+    tx.contents.orderNonce = this.orderNonce;
     // increment the nonce
+    this.orderNonce += 1;
     // sign the transaction to give it "proof of authority"
+    const authoritySig = EthCrypto.sign(this.wallet.privateKey, getTxHash(tx));
     // add the signed transaction to the history
+    tx.sigs.push(authoritySig);
     // broadcast the transaction to the network
+    this.network.broadcast(this.pid, tx);
   }
 
   applyTransaction(tx) {
