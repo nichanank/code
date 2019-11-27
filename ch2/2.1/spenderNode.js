@@ -6,12 +6,18 @@ const { Node, getTxHash } = require('../nodeAgent');
 // Spender extends the Node class in nodeAgent.js
 // - this means that everything that is available to the Node class is imported and available to the Spender class as well
 class Spender extends Node {
+  constructor(wallet, genesis, network, nodes) {
+    super(wallet, genesis, network);
+    this.nodes = nodes;
+  }
+
   // returns a random wallet address (excluding the Spender)
   getRandomReceiver() {
-    // TODO
-    // create array of Node addresses that does not include this Node
-    // pick a node at random from the nodes that are not this node
-    // return the address of that random node
+    const otherNodes = this.nodes.filter(
+      node => node.wallet.address !== this.wallet.address,
+    );
+    const randomNode = otherNodes[Math.floor.random() * otherNodes.length];
+    return randomNode.wallet.address;
   }
 
   // tick() makes stuff happen
@@ -20,15 +26,16 @@ class Spender extends Node {
   // - do nothing
   // - send a transaction
   tick() {
-    // TODO
-    // check if we have money
-    // if we have no money, don't do anything
-    // print a fun message to the console stating that we're not doing anything
-    // return to exit the function
-    // if we do have money
-    // Generate a random transaction
-    // add the transaction to our historical transaction list
-    // process the transaction
-    // broadcast the transaction to the network
+    if (this.state[this.wallet.balance] > 0) {
+      const tx = this.generateTx(this.getRandomReceiver(), 1);
+      this.transactions.push(tx);
+      this.applyTransaction(tx);
+      this.network.broadcast(this.pid, tx);
+    } else {
+      console.log('not doing anything because we don`t have money');
+      return;
+    }
   }
 }
+
+module.exports = Spender;
