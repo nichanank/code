@@ -11,6 +11,7 @@ class Spender extends Node {
     super(wallet, genesis, network);
 		// tell the Spender Node about the other nodes on the network
     this.nodes = nodes;
+  }
 
   // returns a random wallet address (excluding the Spender)
   getRandomReceiver() {
