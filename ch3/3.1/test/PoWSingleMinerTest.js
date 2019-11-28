@@ -1,5 +1,5 @@
 const EthCrypto = require('eth-crypto');
-const NetworkSimulator = require('../networksim');
+const NetworkSimulator = require('../../networksim');
 const Miner = require('./PoWMiner');
 const Client = require('../PoWClient');
 
